@@ -89,6 +89,9 @@ public class SkipList<T extends Comparable<? super T>> {
 
 	// Find smallest element that is greater or equal to x
 	public T ceiling(T x) {
+		find(x);
+		if(!last[0].next[0].equals(tail))
+			return last[0].next[0].element;
 		return null;
 	}
 
@@ -103,12 +106,18 @@ public class SkipList<T extends Comparable<? super T>> {
 
 	// Return first element of list
 	public T first() {
+		if(!head.next[0].equals(tail))
+			return head.next[0].element;
 		return null;
 	}
 
 	// Find largest element that is less than or equal to x
 	public T floor(T x) {
-		return null;
+		find(x);
+		if (last[0].next[0] != null && last[0].next[0].element != null && last[0].next[0].element.equals(x))
+			return x;
+		else
+			return last[0].element;	
 	}
 
 	// Return element at index n of list.  First element is at index 0.
@@ -144,11 +153,49 @@ public class SkipList<T extends Comparable<? super T>> {
 
 	// Iterate through the elements of list in sorted order
 	public Iterator<T> iterator() {
-		return null;
+		return new SLIterator<T>(this);
 	}
+	private class SLIterator<E extends Comparable<? super E>> implements Iterator<E> {
+		SkipList<E> list;
+		Entry<E> cursor, prev;
+		boolean ready;
+
+		SLIterator(SkipList<E> list) {
+			this.list = list;
+			cursor = (Entry<E>) list.head;
+			prev = null;
+			ready = false;
+		}
+
+		public boolean hasNext() {
+			return !cursor.next[0].equals(tail);
+		}
+
+		public E next() {
+			if (hasNext()) {
+
+				prev = cursor;
+				cursor = cursor.next[0];
+				ready = true;
+				return cursor.element;
+			}
+			return null;
+		}
+		public void remove() {
+			if (!ready) {
+				throw new NoSuchElementException();
+			}
+			list.remove(cursor.element);
+			cursor = prev;
+			ready = false;
+
+		}
+	}
+
 
 	// Return last element of list
 	public T last() {
+
 		return null;
 	}
 
