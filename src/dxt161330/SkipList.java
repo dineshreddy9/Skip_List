@@ -195,7 +195,8 @@ public class SkipList<T extends Comparable<? super T>> {
 
 	// Return last element of list
 	public T last() {
-
+		if(!tail.prev.equals(head))
+			return tail.prev.element;
 		return null;
 	}
 
