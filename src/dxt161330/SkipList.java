@@ -39,6 +39,7 @@ public class SkipList<T extends Comparable<? super T>> {
 	public SkipList() {
 		head = new Entry<>(null, PossibleLevels);
 		tail = new Entry<>(null, PossibleLevels);
+		tail.prev = head;
 		size = 0;
 		maxLevel = 1;
 		last = new Entry[PossibleLevels];
@@ -136,7 +137,6 @@ public class SkipList<T extends Comparable<? super T>> {
 		for(int i=0; i<=n; i++) {
 			p = p.next[0];
 		}
-		System.out.println(p.element);
 		return p.element;
 	}
 
@@ -195,14 +195,15 @@ public class SkipList<T extends Comparable<? super T>> {
 
 	// Return last element of list
 	public T last() {
-
+		if(!tail.prev.equals(head))
+			return tail.prev.element;
 		return null;
 	}
 
 	// Optional operation: Reorganize the elements of the list into a perfect skip list
 	// Not a standard operation in skip lists. Eligible for EC.
 	public void rebuild() {
-
+		
 	}
 
 	// Remove x from list.  Removed element is returned. Return null if x not in list
@@ -241,6 +242,18 @@ public class SkipList<T extends Comparable<? super T>> {
 		}
 		sk.printList();
 		System.out.println(sk.remove(9));
+		System.out.println("ceiling "+sk.ceiling(9));
+		System.out.println("contains "+sk.contains(9));
+		System.out.println(sk.first());
+		System.out.println(sk.floor(9));
+		System.out.println(sk.get(2));
+		System.out.println(sk.isEmpty());
+		System.out.println("last "+sk.last());
+		System.out.println(sk.size());
+		Iterator<Integer> it = sk.iterator();
+		System.out.println(it.hasNext());
+		System.out.println(it.next());
+		it.remove();
 		sk.printList();
 	}
 }
