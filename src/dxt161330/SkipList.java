@@ -49,7 +49,7 @@ public class SkipList<T extends Comparable<? super T>> {
 		}
 		random = new Random();
 	}
-	
+
 	// helper method to search for x
 	// sets last[i] = node at which search came down from level i to i-1
 	public void find(T x) {
@@ -102,7 +102,8 @@ public class SkipList<T extends Comparable<? super T>> {
 			return false;
 		}
 		find(x);
-		return (last[0].next[0].element == x);
+		if(last[0].next[0].element!=null && last[0].next[0].element.equals(x)) return true;
+		return false;
 	}
 
 	// Return first element of list
@@ -203,7 +204,7 @@ public class SkipList<T extends Comparable<? super T>> {
 	// Optional operation: Reorganize the elements of the list into a perfect skip list
 	// Not a standard operation in skip lists. Eligible for EC.
 	public void rebuild() {
-		
+
 	}
 
 	// Remove x from list.  Removed element is returned. Return null if x not in list
@@ -223,7 +224,7 @@ public class SkipList<T extends Comparable<? super T>> {
 	public int size() {
 		return size;
 	}
-	
+
 	public void printList() {
 		Entry<T> temp = head;
 		for(int i=0; i<size; i++) {
@@ -232,7 +233,7 @@ public class SkipList<T extends Comparable<? super T>> {
 		}
 		System.out.println();
 	}
-	
+
 	// to test the program
 	public static void main(String[] args) {
 		SkipList<Integer> sk = new SkipList<>();
@@ -243,7 +244,7 @@ public class SkipList<T extends Comparable<? super T>> {
 		sk.printList();
 		System.out.println(sk.remove(9));
 		System.out.println("ceiling "+sk.ceiling(9));
-		System.out.println("contains "+sk.contains(9));
+		System.out.println("contains "+sk.contains(11));
 		System.out.println(sk.first());
 		System.out.println(sk.floor(9));
 		System.out.println(sk.get(2));
