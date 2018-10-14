@@ -13,13 +13,14 @@ package dxt161330;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Random;
-import java.util.Scanner;
+//import java.util.Scanner;
 
 public class SkipList<T extends Comparable<? super T>> {
 	static final int PossibleLevels = 33;
 	Entry<T> head, tail; // dummy nodes
 	int size, maxLevel;
 	Entry<T>[] last;
+	int[] lastIndex; //used to store the index of the elements
 	Random random;
 
 	static class Entry<E> {
@@ -48,9 +49,11 @@ public class SkipList<T extends Comparable<? super T>> {
 		size = 0;
 		maxLevel = 1;
 		last = new Entry[PossibleLevels];
+		lastIndex = new int[PossibleLevels];
 		for(int i=(PossibleLevels-1); i>=0; i--) {
 			last[i] = head;
 			last[i].next[i] = tail;
+			last[i].span[i] = 1;
 		}
 		random = new Random();
 	}
@@ -59,12 +62,14 @@ public class SkipList<T extends Comparable<? super T>> {
 	// sets last[i] = node at which search came down from level i to i-1
 	public void find(T x) {
 		Entry<T> p = head;
+		int indexSum = 0;
 		for(int i=(maxLevel-1); i>=0; i--) {
-			while(p.next[i]!=null && (p.next[i].element!=null)&&(p.next[i].element.compareTo(x))==-1) {
-				//System.out.println("find"+x);
+			while(p.next[i] != null && p.next[i].element != null && p.next[i].element.compareTo(x) == -1) {
+				indexSum += p.span[i];
 				p = p.next[i];
 			}
 			last[i] = p;
+			lastIndex[i] = indexSum;
 		}
 	}
 
@@ -78,6 +83,13 @@ public class SkipList<T extends Comparable<? super T>> {
 		for(int i=0; i<level; i++) {
 			newEntry.next[i] = last[i].next[i];
 			last[i].next[i] = newEntry;
+			int temp = last[i].span[i];
+			last[i].span[i] = lastIndex[0]+1-lastIndex[i];
+			newEntry.span[i] = temp+1-last[i].span[i];
+			
+		}
+		for(int i=level; i < PossibleLevels; i++) {
+			last[i].span[i] += 1;
 		}
 		newEntry.next[0].prev = newEntry;
 		newEntry.prev = last[0];
@@ -149,7 +161,15 @@ public class SkipList<T extends Comparable<? super T>> {
 	// Optional operation: Eligible for EC.
 	// O(log n) expected time for get(n). Requires maintenance of spans, as discussed in class.
 	public T getLog(int n) {
-		return null;
+		Entry<T> p = head;
+		n = n+1;
+		for(int i = maxLevel - 1; i >= 0; i--) {
+			while(n >= p.span[i]) {
+				n = n - p.span[i];
+				p = p.next[i];
+			}
+		}
+		return p.element;
 	}
 
 	// Is the list empty?
@@ -218,8 +238,13 @@ public class SkipList<T extends Comparable<? super T>> {
 			return null;
 		}
 		Entry<T> removeEntry = last[0].next[0];
-		for(int i=0; i<removeEntry.next.length; i++) {
+		int length = removeEntry.next.length;
+		for(int i=0; i<length; i++) {
 			last[i].next[i] = removeEntry.next[i];
+			last[i].span[i] += removeEntry.span[i] - 1; 
+		}
+		for(int i=length; i<PossibleLevels; i++) {
+			last[i].span[i] -= 1; 
 		}
 		size = size-1;
 		return removeEntry.element;
@@ -242,7 +267,7 @@ public class SkipList<T extends Comparable<? super T>> {
 	// to test the program
 	public static void main(String[] args) {
 		SkipList<Integer> sk = new SkipList<>();
-		Scanner sc = new Scanner(System.in);
+		//Scanner sc = new Scanner(System.in);
 		for(int i=1;i<13;i=i+2) {
 			sk.add(i);
 		}
