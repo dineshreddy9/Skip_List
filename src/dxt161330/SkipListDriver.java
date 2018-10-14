@@ -1,5 +1,4 @@
 package dxt161330;
-import dxt161330.Timer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;

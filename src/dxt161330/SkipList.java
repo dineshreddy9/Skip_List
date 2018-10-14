@@ -1,7 +1,12 @@
 /*
- * @author Dinesh Reddy Thokala
+ * @author 
+ * Dinesh Reddy Thokala
+ * Anirudh Erabelly
+ * Sai Krishna Reddy
+ * Sreyas Reddy
+ * 
  * SkipList
- * Ver 1.0: 09/30/2018
+ * VER 1.0: 09/30/2018
  */
 package dxt161330;
 
