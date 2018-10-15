@@ -248,6 +248,7 @@ public class SkipList<T extends Comparable<? super T>> {
 		}
 		
 		this.head = list.head;
+		this.maxLevel = maxlevel;
 		this.retemp = list.head;
 		list.retemp = list.head;
 		for(int k=0; k< this.size; k++) {
@@ -280,22 +281,21 @@ public class SkipList<T extends Comparable<? super T>> {
 		
 		Entry<T> temp = head;
 		int i = 0;
-		
-		while(temp!=null) {
-			if(temp.equals(head)) i = maxLevel - 1;
-			else i = temp.next.length - 1;
-			System.out.print("(no of levels - 1) "+i+" next ");
-			while(i >= 0) {
+		System.out.println("Max level is " + maxLevel);
+		while(i < maxLevel) {
+			System.out.print("Level "+(i+1)+" elements: ");
+			while(temp!=null) {
 				if(temp.next[i]==null) {
-					System.out.print("null ");
+					break;
 				}
 				else {
 					System.out.print(temp.next[i].element+" ");
 				}
-				i--;
+				temp = temp.next[i];
 			}
 			System.out.println();
-			temp = temp.next[0];
+			temp = head;
+			i++;
 		}
 	}
 	
